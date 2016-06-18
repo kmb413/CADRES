@@ -39,7 +39,7 @@ def main(argv):
     ########################################################################
 
     with open('tleap.in','w') as tfile:
-        tfile.write("source leaprc.ff14SBonlysc\n")
+        tfile.write("source leaprc.protein.ff14SBonlysc\n")
         tfile.write("m = loadpdb NoH_{native}.clean.pdb\n".format(native=input_pdb) )
         tfile.write("set default pbradii mbondi3\n")
         tfile.write("saveamberparm m {native}.parm7 {native}.rst7\n".format(native=input_pdb) )

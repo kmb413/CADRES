@@ -32,8 +32,8 @@ NATIVES_DIR =  "{base_directory}/Natives".format( base_directory=BASE_DIR )
 DECOY_DIR   =  "{base_directory}/loop_modeling_ngk_r57934/r57934/talaris2014/job_output".format( base_directory=BASE_DIR )
 ##########################
 
-## Define tLeap parameters ##TODO: @Hai - you had source leaprc.protein.ff14SBonlysc. Is there a difference?
-tleap_template = '''source leaprc.ff14SBonlysc 
+## Define tLeap parameters 
+tleap_template = '''source leaprc.protein.ff14SBonlysc 
 m = loadpdb NoH_{pdbfile_root}.pdb
 set default pbradii mbondi3
 saveamberparm m {code}.parm7 NoH_{pdbfile_root}.rst7
