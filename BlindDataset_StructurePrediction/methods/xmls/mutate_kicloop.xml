@@ -1,0 +1,38 @@
+<ROSETTASCRIPTS>
+    <SCOREFXNS>
+
+        <myscore weights=talaris2013_cst.wts />
+
+	</SCOREFXNS>
+
+    <RESIDUE_SELECTORS>
+    </RESIDUE_SELECTORS>
+
+    <TASKOPERATIONS>
+    </TASKOPERATIONS>
+
+    <FILTERS>
+        
+    </FILTERS>
+
+    <MOVERS>
+    
+        Remodel the loop with the actual seq (rest of protein is all ala, so flexible SC's will have less influence on loop BB).
+        <LoopRemodel name=remodel_loop auto_loops=0 loop_start_res_num=180 loop_end_res_num=189 hurry=0 protocol=kinematic perturb_score=score4L refine_score=myscore perturb=1 refine=0 design=0 />
+
+        Thread designed sequence onto protein.
+        <SimpleThreadingMover name=mut_seq start_position=1 thread_sequence=%%real_seq%% pack_neighbors=0 neighbor_dis=0 pack_rounds=1/>
+        
+    </MOVERS>
+    
+    <APPLY_TO_POSE>
+    </APPLY_TO_POSE>
+
+    <PROTOCOLS>
+        
+        <Add mover=remodel_loop />
+        <Add mover=mut_seq />
+
+    </PROTOCOLS>
+
+</ROSETTASCRIPTS>

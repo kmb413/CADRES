@@ -1,0 +1,44 @@
+<ROSETTASCRIPTS>
+    <SCOREFXNS>
+
+        <myscore weights=talaris2013_cst.wts />
+
+	</SCOREFXNS>
+
+    <RESIDUE_SELECTORS>
+
+        <Index name=loopmuts resnums=109,158,179,209,210,180-189 />
+        <Neighborhood name=loopmuts_neighbs selector=loopmuts distance=8.0 />
+        <Not name=not_loopmuts_neighbs selector=loopmuts_neighbs />
+
+    </RESIDUE_SELECTORS>
+
+    <TASKOPERATIONS>
+
+        <OperateOnResidueSubset name=turnoff_notloopmutsneighb selector=not_loopmuts_neighbs >
+            <PreventRepackingRLT/>
+        </OperateOnResidueSubset>
+
+
+    </TASKOPERATIONS>
+
+    <FILTERS>
+        
+    </FILTERS>
+
+    <MOVERS>
+
+        <FastRelax name=fastrelax scorefxn=myscore repeats=5 task_operations=turnoff_notloopmutsneighb />
+        
+    </MOVERS>
+    
+    <APPLY_TO_POSE>
+    </APPLY_TO_POSE>
+
+    <PROTOCOLS>
+        
+        <Add mover=fastrelax />
+
+    </PROTOCOLS>
+
+</ROSETTASCRIPTS>

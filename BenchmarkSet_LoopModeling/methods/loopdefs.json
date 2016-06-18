@@ -226,10 +226,10 @@
     "1t1d": {
         "chainID": "A", 
         "DOI": "10.1002/prot.21990", 
-        "EndResidueID": " 138 ", 
+        "EndResidueID": " 73 ", 
         "PassedFilter": true, 
         "Sequence": "SGGRLRRPVNVP", 
-        "StartResidueID": " 127 "
+        "StartResidueID": " 62 "
     }, 
     "1tca": {
         "chainID": "A", 

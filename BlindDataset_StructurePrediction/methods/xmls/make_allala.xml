@@ -1,0 +1,35 @@
+<ROSETTASCRIPTS>
+    <SCOREFXNS>
+
+        <myscore weights=talaris2013_cst.wts />
+
+	</SCOREFXNS>
+
+    <RESIDUE_SELECTORS>
+
+    </RESIDUE_SELECTORS>
+
+    <TASKOPERATIONS>
+
+    </TASKOPERATIONS>
+
+    <FILTERS>
+        
+    </FILTERS>
+
+    <MOVERS>
+
+        <SimpleThreadingMover name=all_ala start_position=1 thread_sequence=%%all_ala%% pack_neighbors=0 pack_rounds=1/>
+
+    </MOVERS>
+    
+    <APPLY_TO_POSE>
+    </APPLY_TO_POSE>
+
+    <PROTOCOLS>
+        
+        <Add mover=all_ala />
+
+    </PROTOCOLS>
+
+</ROSETTASCRIPTS>

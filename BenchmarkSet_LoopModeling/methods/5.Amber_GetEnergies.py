@@ -16,10 +16,10 @@ NATIVES_DIR =  "{base_directory}/Natives".format( base_directory=BASE_DIR )
 AMBERMIN_DIR = "{base_directory}/amber_minimization".format( base_directory=BASE_DIR )
 #############
 
-try:
-    os.mkdir('{base_directory}/amber_minimization/AmberScores/'.format( base_directory=BASE_DIR ) )
-except OSError:
-    pass
+#try:
+#    os.mkdir('{base_directory}/amber_minimization/AmberScores/'.format( base_directory=BASE_DIR ) )
+#except OSError:
+#    pass
 
 def chunks(l,n):
     n = max(1,n)

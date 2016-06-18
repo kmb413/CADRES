@@ -82,9 +82,9 @@ def main(pdblist, auto_submit):
 if __name__ == '__main__':
     pdblist_ = sys.argv[1]
     
-    auto_submit = 1
+    submit = 1
     if  len(sys.argv) > 2:
-        auto_submit = sys.argv[2]
+        submit = sys.argv[2]
 
     if os.path.isfile(pdblist_):
         with open(pdblist_) as fh:
@@ -92,4 +92,4 @@ if __name__ == '__main__':
     else:
         PDBLIST = pdblist_.split(',')
 
-    main(pdblist=PDBLIST, auto_submit)
+    main(pdblist=PDBLIST, auto_submit=submit)
