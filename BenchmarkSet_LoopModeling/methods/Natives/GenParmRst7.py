@@ -1,6 +1,6 @@
-import os, sys, getopt
+##Generate rst7 files and parm7 files from all clean pdbs in this directory.
 
-PATH_TO_DECOYDISC = "/scratch/kmb413/RealDecoyDisc/loop_modeling_ngk_r57934/minimization/Natives/"
+import os, sys, getopt
 
 def chunks(l,n):
     n = max(1,n)
@@ -32,8 +32,6 @@ def main(argv):
     ########################################################################
     #decoys.append( "%s.trimmed.pdb\n" % input_pdb )
     
-    os.chdir(PATH_TO_DECOYDISC)
-
     os.system("sed '/     H  /d' {native}.clean.pdb > NoH_{native}.clean.pdb".format(native=input_pdb))
 
     ########################################################################
