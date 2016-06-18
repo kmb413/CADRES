@@ -1,0 +1,5 @@
+source leaprc.ff14SBonlysc
+m = loadpdb NoH_1oth.clean.pdb
+set default pbradii mbondi3
+saveamberparm m 1oth.parm7 1oth.rst7
+quit

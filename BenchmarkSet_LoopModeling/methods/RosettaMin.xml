@@ -1,0 +1,63 @@
+<ROSETTASCRIPTS>
+    <SCOREFXNS>
+
+        <myscore weights=talaris2014.wts />
+
+	</SCOREFXNS>
+
+    <RESIDUE_SELECTORS>
+
+        <Index name=loop resnums=%%loop_start%%-%%loop_end%%/>
+        <Not name=not_loop selector=loop />
+
+    </RESIDUE_SELECTORS>
+
+    <TASKOPERATIONS>
+
+        Turn off all residues that are not in the loop region. Leave loop designable.
+        <OperateOnResidueSubset name=loop_region_designable selector=not_loop >
+            <PreventRepackingRLT/>
+        </OperateOnResidueSubset>
+
+    </TASKOPERATIONS>
+
+    <FILTERS>
+        
+        CA RMSD of loop when surrounding is superimposed (shape and position of loop)
+        <Rmsd name=rmsd threshold=100 superimpose=0 >
+            <span begin_res_num=%%loop_start%% end_res_num=%%loop_end%% />
+        </Rmsd>
+
+        CA RMSD of loop when loop is superimposed (shape of loop)
+        <Rmsd name=rmsd_suploop threshold=100 superimpose=1 >
+            <span begin_res_num=%%loop_start%% end_res_num=%%loop_end%% />
+        </Rmsd>
+
+        Energy for set of residues.
+        <TaskAwareScoreType name=loop_energy task_operations=loop_region_designable scorefxn=myscore score_type=total_score threshold=100000 mode=total />
+    
+    </FILTERS>
+
+    <MOVERS>
+
+        Superimpose onto Native by 1:(loop start -1) residues.
+        <Superimpose name=super_notloop ref_start=1 ref_end=%%loop_start_pre%% target_start=1 target_end=%%loop_start_pre%% CA_only=1 />
+
+        Minimize the loop region only.
+        <TaskAwareMinMover name=min_sc_bb_looponly scorefxn=myscore chi=1 bb=1 tolerance=0.0001 max_iter=2000 type=lbfgs_armijo_nonmonotone task_operations=loop_region_designable />
+
+    </MOVERS>
+    
+    <APPLY_TO_POSE>
+    </APPLY_TO_POSE>
+
+    <PROTOCOLS>
+
+        <Add mover=min_sc_bb_looponly/>
+        <Add mover=super_notloop/>
+	    <Add filter=rmsd/>
+        <Add filter=rmsd_suploop/>
+
+    </PROTOCOLS>
+
+</ROSETTASCRIPTS>
