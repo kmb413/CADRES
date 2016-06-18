@@ -1,0 +1,39 @@
+<ROSETTASCRIPTS>
+    <SCOREFXNS>
+
+        <myscore weights=talaris2013_cst.wts />
+
+	</SCOREFXNS>
+
+    <RESIDUE_SELECTORS>
+
+    </RESIDUE_SELECTORS>
+
+    <TASKOPERATIONS>
+
+    </TASKOPERATIONS>
+
+    <FILTERS>
+        <ScoreType name=csts scorefxn=myscore score_type="coordinate_constraint" threshold=1000000 />
+        
+    </FILTERS>
+
+    <MOVERS>
+        <AddConstraintsToCurrentConformationMover name=add_coord_csts use_distance_cst=0 coord_dev=.1 bound_width=0 cst_weight=1.0 CA_only=0 bb_only=1 />
+
+        <FastRelax name=fastrelax scorefxn=myscore repeats=5 />
+
+    </MOVERS>
+    
+    <APPLY_TO_POSE>
+    </APPLY_TO_POSE>
+
+    <PROTOCOLS>
+
+        <Add mover=add_coord_csts />
+        <Add mover=fastrelax />
+        <Add filter=csts />
+
+    </PROTOCOLS>
+
+</ROSETTASCRIPTS>
