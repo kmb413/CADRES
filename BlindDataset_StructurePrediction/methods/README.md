@@ -24,6 +24,7 @@ python 1.FastRelax_Initial.sh
 
 - **Description**
     - Adds coordinate constraints to the crystal structure, then fastrelaxes (repeats=5) the structure with an nstruct of 50.
+    
 - **Expected Output**
     - 50 `1igs_0001_00*.pdb` files
     - A `score_fastrelax_initial.sc` file.
@@ -77,7 +78,6 @@ python 4.FastRelax_LoopandMutantsPlusNeighbs.py
 - **Expected Output**
     - A `4.FastRelax_LoopandMutantsPlusNeighbs/` directory
         - 40 bash scripts that run the xml protocol on each of the 1000 structures in the `3.RemodelLoop_ThreadSeq/` directory.
-        
         - After the scripts have run,
             - 5000 decoy structures.
 
