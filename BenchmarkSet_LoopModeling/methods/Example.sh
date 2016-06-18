@@ -1,4 +1,6 @@
 #### This example script runs all minimizations and scoring methods on one PDB ID, 1oyc.
+## If you are running this, make sure to change the BASE_DIR variable in scripts 1., 2., 3., and 5.
+## Also, in script 1., you must change the ROS_EXE variable to your Rosetta Executables path and the ROS_DB variable to you Rosetta database path.
 
 ## First, minimize in Rosetta. This runs the 1.Rosetta_Minimize script without automatic submission.
 python 1.Rosetta_Minimize.py 1oyc 0
