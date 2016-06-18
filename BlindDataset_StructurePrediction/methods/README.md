@@ -80,6 +80,7 @@ python 4.FastRelax_LoopandMutantsPlusNeighbs.py
         - 40 bash scripts that run the xml protocol on each of the 1000 structures in the `3.RemodelLoop_ThreadSeq/` directory.
         - After the scripts have run,
             - 5000 decoy structures.
+            - 40 `fastrelaxed_*.sc` files.
 
 #### 5. Minimize the decoys in Amber:
 
