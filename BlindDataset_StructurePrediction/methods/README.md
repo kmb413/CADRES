@@ -93,6 +93,7 @@ python 5.AmberMinimize.py
 - **Description**  
     - This script makes a directory in which it writes bash scripts to run Amber minimization.
     - Each bash script removes the Hydrogen atoms from the decoys in the `4.FastRelax_LoopandMutantsPlusNeighbs/` directory, converts them to `.rst7` coordinate files, and writes a `decoy.parm7` topology file using a system call to `tLeap`. It then uses `sander` to run Amber minimization on the `.rst7` files, where the minimization parameters are given in the `min_norestraint.in` file.
+    - Minimization were performed using 14SBonlysc force field and GBNeck2 implicit solvent model. XMIN method is used with max cycles of 1000. Minimization will be stopped if the root-mean-square of the Cartesian elements of the gradients is less than 0.01 kcal/mol.
 
 - **Expected Output**
     - A `5.AmberMinimize/` directory.
