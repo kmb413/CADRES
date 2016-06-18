@@ -1,0 +1,2 @@
+description	amd_boost	angle	angle_ub	bond	cmap	constraint	ct	dihedral	disp	dvdl	elec	elec_14	emap	gb	hbond	imp	les	noe	pb	polar	rism	rmsd	rmsd_suploop	scf	surf	tot	vdw	vdw_14	
+/scratch/kmb413/RealDecoyDisc/loop_modeling_ngk_r57934/minimization/Natives/2pia.rst7	0.0	656.343016054	0.0	162.374741185	0.0	0.0	0.0	3850.32075918	0.0	0.0	-21379.4643458	11327.9607169	0.0	-4476.77894849	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	-10579.1475574	-2135.12035749	1415.21686112	
