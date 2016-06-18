@@ -29,6 +29,8 @@ the 1oyc example.
 #### Then, minimize the decoy structures using Rosetta:
 
 ```bash
+# In 1.Rosetta_Minimize.py, you must change the BASE_DIR variable to be this /method/ folder, the ROSETTA_EXE path to be your Rosetta Executables path, and the ROS_DB path to be your Rosetta database path.
+
 python 1.Rosetta_Minimize.py pdblist
 
 # pdblist is a file containing a list of all 45 short-loop PDB IDs.
@@ -69,6 +71,8 @@ unless auto_submit is explicitly turned off:
 #### Concurrently, minimize the decoy structures using Amber:
 
 ```bash
+# In scripts 2. and 3., change the BASE_DIR variable to the /method/ directory.
+
 python 2.Amber_MinimizationSetUp pdblist
 python 3.Amber_GenerateRST7andParm7.py pdblist
 for pdb in `cat pdblist`
@@ -103,6 +107,7 @@ for pdb in `cat pdblist`
 ### Score the Amber-minimized structures:
 
 ```bash
+# In script 5.Amber_GetEnergies.py, change the BASE_DIR variable to the /method/ folder.
 python make_energy_bashscripts.py pdblist
 for SCRIPT in `ls GetScores*.sh`; do sbatch $SCRIPT ; done
 ```

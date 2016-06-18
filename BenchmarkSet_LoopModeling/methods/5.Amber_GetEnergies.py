@@ -10,9 +10,11 @@ loopdef = pd.read_json('loopdefs.json')
 # create mpi handler to get cpu rank
 comm = MPI.COMM_WORLD
 
+##############
 BASE_DIR    =  "/scratch/kmb413/CADRES/BenchmarkSet_LoopModeling/methods"
 NATIVES_DIR =  "{base_directory}/Natives".format( base_directory=BASE_DIR )
 AMBERMIN_DIR = "{base_directory}/amber_minimization".format( base_directory=BASE_DIR )
+#############
 
 try:
     os.mkdir('{base_directory}/amber_minimization/AmberScores/'.format( base_directory=BASE_DIR ) )

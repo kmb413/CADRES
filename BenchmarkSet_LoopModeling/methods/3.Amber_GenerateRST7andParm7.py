@@ -60,7 +60,7 @@ def main(pdblist, force=False):# pdb_pattern, force=False):
             print(os.getcwd())
             try:
                 pdbfiles = glob('{decoy_directory}/{code}*.pdb'.format(decoy_directory=DECOY_DIR, code=code))
-                for pdbfile in pdbfiles[0:5]: #TODO: change back!
+                for pdbfile in pdbfiles:
                     basename = os.path.basename(pdbfile)
                     try:
                         parm = pmd.load_file(pdbfile)
