@@ -29,7 +29,7 @@ for pdb_chunk in range(len(chunk_list)):
             os.system("sed '/     H  /d' {pdb} > NoH_{pdbname}".format(pdb=pdb, pdbname=pdb.split('/')[-1]) )
             
             with open('tleap.in','w') as tfile:
-                tfile.write("source leaprc.ff14SBonlysc\n")
+                tfile.write("source leaprc.protein.ff14SBonlysc\n")
                 tfile.write("m = loadpdb NoH_{pdbname}\n".format(pdbname=pdb.split('/')[-1]))
                 tfile.write("set default pbradii mbondi3\n")
                 tfile.write("saveamberparm m decoy.parm7 {pdbname}.rst7\n".format(pdbname=pdb.split('/')[-1]))
