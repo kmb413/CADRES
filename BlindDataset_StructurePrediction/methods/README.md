@@ -12,7 +12,7 @@ Instructions
 
 ### To predict the structure of the mutant 1igs,
 
-#### First, FastRelax the crystal structure of 1igs:
+#### 1. First, FastRelax the crystal structure of 1igs:
 
 ```bash
 # Before running script, change the ROS_EXE variable to your executables path, ROS_DB to your database path, and BASE_DIR to this methods folder.
@@ -28,7 +28,7 @@ python 1.FastRelax_Initial.sh
     - 50 `1igs_0001_00*.pdb` files
     - A `score_fastrelax_initial.sc` file.
 
-#### Then, mutate all non-loop residues to ALA, and thread the mutated sequence on the loop region:
+#### 2. Then, mutate all non-loop residues to ALA, and thread the mutated sequence on the loop region:
 
 ```bash
 # Before running script, change ROS_EXE to your executables path, ROS_DB to your database path, and BASE_DIR to this methods folder.
@@ -44,7 +44,7 @@ bash 2.Mutate_to_all_ALA.sh
     - A `1igs_0001_0037_0001.pdb` file.
     - A `allala.sc` file.
 
-#### Remodel the loop region and then thread the entire mutated sequence onto the decoy structure:
+#### 3. Remodel the loop region and then thread the entire mutated sequence onto the decoy structure:
 
 ```bash
 # Before running script, change the ROS_EXE variable to your executables path, ROS_DB to your database path, and BASE_DIR to this methods folder.
@@ -62,7 +62,7 @@ python 3.ThreadSeq_and_RemodelLoop.py
         - After the scripts have run, 
             - 1000 decoy structures, each with slightly different loop structures and full mutated sequences.
 
-#### FastRelax the loop region and mutated residues, along with their neighboring residues:
+#### 4. FastRelax the loop region and mutated residues, along with their neighboring residues:
 
 ```bash
 # Before running script, change ROS_EXE to your executables path, ROS_DB to your database path, and BASE_DIR to this methods folder.
@@ -81,7 +81,7 @@ python 4.FastRelax_LoopandMutantsPlusNeighbs.py
         - After the scripts have run,
             - 5000 decoy structures.
 
-#### Minimize the decoys in Amber:
+#### 5. Minimize the decoys in Amber:
 
 ```bash
 # Before running script, change BASE_DIR to this methods folder and AMBER_SOURCE to the location of your AmberTool16 amber.sh file.
@@ -102,7 +102,7 @@ python 5.AmberMinimize.py
             - 5000 `min*.rst7` files.
 
 
-#### Evaluate the Amber energies:
+#### 6. Evaluate the Amber energies:
 
 ```bash
 # Before running script, change BASE_DIR to this methods folder.
@@ -114,6 +114,6 @@ python 6.GetAmberEnergies.py
     - This script evaluates the Amber energies for all decoys in the `5.AmberMinimize/` directory and writes them to a score file.
 
 - **Expected Output**
-    - A `AmberScores.sc` file.
+    - An `AmberScores.sc` file.
 
 #### Choose the best structure:
