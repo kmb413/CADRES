@@ -13,9 +13,6 @@ def main(argv):
 
     decoy_list = glob( "{base}/5.AmberMinimize/min*.rst7".format( base=BASE_DIR ) )
 
-    decoy_list = []
-    for d in decoy_list_long:
-        decoy_list.append(d.strip())
     print("Decoy List: " + str(len(decoy_list)))
     parmfile = "{base}/5.AmberMinimize/decoy.parm7".format( base=BASE_DIR )
     
