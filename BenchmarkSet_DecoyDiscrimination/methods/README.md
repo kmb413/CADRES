@@ -17,15 +17,15 @@ Files Included
 
 ***Rosetta Run***
 - **1.extract.sh** Extract pdb files from silent files for Rosetta run
-- **2.min.sh** Minimize and score decoys for rmsd 
+- **2.rosetta_min.sh** Minimize and score decoys for rmsd 
     - **min.xml** helper script for above
 
 ***Amber Run***
 - **3.pdbgen_from_rosetta.py** Extract pdb files from silent files for Amber run
 - **4.generate_rst7_parm7_files.py** Generate topology and resart files for Amber minimization
-- **5.run_min.py** Run minimization
+- **5.amber_minimization.py** Run minimization
     - **min.in** helper script for above
-- **6.eamber_single.py** Get AMBER potential energies
+- **6.amber_energies.py** Get AMBER potential energies
 
 ***Wrapper/helper scripts***
 - **utils.py** Used in Amber run
@@ -39,14 +39,51 @@ Instructions
 
 #### 1. place the silent files in $BASEDIR/input/decoys.set<set_number>
 #### 2. extract pdbs from the silent files
+
 - Script for one silent file
-```bash
-1.extract.sh $BASEDIR/input/decoys.set1/ 1a32.1000.out $BASEDIR/input/decoys.set1/1a32/ 1a32
-```
-- Wrapper script to extract all silent files when run on one server
-```bash
-loop_pdbs.sh $BASEDIR/input/decoys.set1/ "*.out" $BASEDIR/input/decoys.set1/ 0 1.extract.sh 1 1 talaris2014 1
-```
+
+    ```bash
+    1.extract.sh $BASEDIR/input/decoys.set1/ 1a32.1000.out $BASEDIR/input/decoys.set1/1a32/ 1a32
+    ```
+
+- Wrapper script to extract all silent files when run on one server with at least 40 cores available (can change n_cores in the script itself)
+
+    ```bash
+    loop_pdbs.sh $BASEDIR/input/decoys.set1/ "*.out" $BASEDIR/input/decoys.set1/ 0 1.extract.sh 1 1 talaris2014 1
+    ```
+
+- **Description**
+    - This script will make a `../output/rosetta_minimization directory` in which it will also make
+sub-directories for each of the 45 PDB IDs. In each sub-directory, it will write several
+minimization bash scripts that have a slurm-style queueing system header and the
+minimization command. The minimization scripts will be automatically submitted to the queue
+unless auto_submit is explicitly turned off:
+
+        ```bash
+        python 1.Rosetta_Minimize.py ../input/pdblist 0
+        ```
+        - If you use this flag, you must cd into each directory and bash each min*.sh script.
+
+    - The minimization is carried out via RosettaScripts, where the loop region is minimized with BB and SC movements on. The rest of the protein is left fixed.
+
+    - Flags:
+        - -score:weights talaris2014
+        - -ex1
+        - -ex2
+        - -extrachi_cutoff 1
+        - -use_input_sc
+        - -nblist_autoupdate
+
+- **Expected Output**
+    - A `../output/rosetta_minimization/` directory
+        - `../output/rosetta_minimization/{PDB_Code}` directories
+            - `min*.sh` scripts.
+            - `{PDB_code}.*.list` files, which are lists containing the filepaths to 100 or less decoy structures.
+
+            - After the min*.sh scripts have run,
+                - `{decoy_pdb}_0001.pdb` files
+                - `score.*.sc files`, one for each of the `{PDB_code}.*.list` files.
+
 #### 3. run Rosetta minimization
 - Script for one decoy
 ```bash

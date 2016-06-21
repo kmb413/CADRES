@@ -2,7 +2,7 @@
 '''
 Example: mpirun -n 8 python run_min.py -O -p prmtop -c "*.rst7" -i min.in
 
-Make sure to sue quote " " for pattern
+Make sure to use quote " " for pattern
 '''
 
 import os

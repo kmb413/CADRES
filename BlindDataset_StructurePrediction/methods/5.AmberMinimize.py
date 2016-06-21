@@ -1,21 +1,23 @@
 import os
 from glob import glob
 
-BASE_DIR="/scratch/kmb413/CADRES/BlindDataset_StructurePrediction/methods"
 AMBER_SOURCE="/scratch/kmb413/amber_jan142016/amber.sh"
+BASE_DIR=/scratch/kmb413/CADRES/BlindDataset_StructurePrediction/
+SCRIPTS_DIR="{base}/scripts/".format( base=BASE_DIR )
+OUTPUT_DIR="{base}/work/AmberMinimize/".format( base=BASE_DIR )
 
 try:
-    os.mdkir("{base}/5.AmberMinimize/".format( base=BASE_DIR ) )
+    os.mkdir( OUTPUT_DIR )
 except OSError:
     pass
 
-os.chdir("{base}/5.AmberMinimize/".format( base=BASE_DIR ) )
+os.chdir( OUTPUT_DIR )
 
 def chunks(l,n):
     n = max(1,n)
     return [l[i:i+n] for i in range(0, len(l), n)]
 
-decoy_list = glob('{base}/4.FastRelax_LoopandMutantsPlusNeighbs/*.pdb')
+decoy_list = glob('{base}/work/FastRelax_LoopandMutantsPlusNeighbs/*.pdb'.format( base=BASE_DIR ) )
 chunk_list = chunks(decoy_list, 20)
 
 for pdb_chunk in range(len(chunk_list)):
@@ -23,7 +25,7 @@ for pdb_chunk in range(len(chunk_list)):
     
     with open('minbatch_{count}.sh'.format(count=pdb_chunk), 'w') as script:
         
-        script.write(header)
+        #script.write(header)
     
         for pdb in chunk_list[pdb_chunk]:
             os.system("sed '/     H  /d' {pdb} > NoH_{pdbname}".format(pdb=pdb, pdbname=pdb.split('/')[-1]) )
@@ -36,7 +38,7 @@ for pdb_chunk in range(len(chunk_list)):
                 tfile.write("quit")
             os.system('tleap -f tleap.in')
             
-            command = "sander -i {base}/min_norestraint.in -o {pdbname}.out -p decoy.parm7 -c {pdbname}.rst7 -r min_{pdbname}.rst7 -ref {pdbname}.rst7\n".format( base=BASE_DIR, pdbname=pdb.split('/')[-1])
+            command = "sander -i {scripts}/min_norestraint.in -o {pdbname}.out -p decoy.parm7 -c {pdbname}.rst7 -r min_{pdbname}.rst7 -ref {pdbname}.rst7\n".format( scripts=SCRIPTS_DIR, pdbname=pdb.split('/')[-1])
             script.write(command)
 
-    os.system('sbatch minbatch_{count}.sh &'.format(count=pdb_chunk) )
+    os.system('bash minbatch_{count}.sh &'.format(count=pdb_chunk) )

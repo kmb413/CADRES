@@ -12,6 +12,21 @@ Requirements
 - RosettaScripts
 - [AmberTools16](http://ambermd.org/AmberTools16-get.html)
 
+Files Included
+==============
+***Rosetta Run***
+- **1.Rosetta_Minimize.py** Extract pdb files from silent files for Rosetta run
+    - **RosettaMin.xml** helper script for above
+***Amber Run***
+- **2.Amber_MinimizationSetUp.py** Extract pdb files from silent files for Amber run
+- **3.Amber_GenerateRST7andParm7.py** Generate topology and resart files for Amber minimization
+- **4.Amber_RunMinimization.py** Run minimization
+    - **min.in** helper script for above
+- **5.Amber_GetEnergies.py** Get AMBER potential energies
+    - **make_energy_bashscripts.py** Wrapper script for above
+***Wrapper/helper scripts***
+- **utils.py** Used in Amber run
+
 Instructions
 ============
 
@@ -23,28 +38,25 @@ Instructions
 7za loop_modeling_ngk_r57934.7z
 ```
 
-- Note: There exists an extracted loop_modeling_ngk_r57934 folder, but this only contains decoy structures for
-the 1oyc example.
-
 #### Then, minimize the decoy structures using Rosetta:
 
 ```bash
 # In 1.Rosetta_Minimize.py, you must change the BASE_DIR variable to be this /method/ folder, the ROSETTA_EXE path to be your Rosetta Executables path, and the ROS_DB path to be your Rosetta database path.
 
-python 1.Rosetta_Minimize.py pdblist
+python 1.Rosetta_Minimize.py ../input/pdblist
 
 # pdblist is a file containing a list of all 45 short-loop PDB IDs.
 ```
 
 - **Description**  
-    - This script will make a `/rosetta_minimization directory` in which it will also make
+    - This script will make a `../output/rosetta_minimization directory` in which it will also make
 sub-directories for each of the 45 PDB IDs. In each sub-directory, it will write several
 minimization bash scripts that have a slurm-style queueing system header and the
 minimization command. The minimization scripts will be automatically submitted to the queue
 unless auto_submit is explicitly turned off:
 
         ```bash
-        python 1.Rosetta_Minimize.py pdblist 0
+        python 1.Rosetta_Minimize.py ../input/pdblist 0
         ```
         - If you use this flag, you must cd into each directory and bash each min*.sh script.
 
@@ -59,8 +71,8 @@ unless auto_submit is explicitly turned off:
         - -nblist_autoupdate
 
 - **Expected Output**
-    - A `/rosetta_minimization/` directory
-        - `/rosetta_minimization/{PDB_Code}` directories
+    - A `../output/rosetta_minimization/` directory
+        - `../output/rosetta_minimization/{PDB_Code}` directories
             - `min*.sh` scripts.
             - `{PDB_code}.*.list` files, which are lists containing the filepaths to 100 or less decoy structures.
 
@@ -73,18 +85,18 @@ unless auto_submit is explicitly turned off:
 ```bash
 # In scripts 2. and 3., change the BASE_DIR variable to the /method/ directory.
 
-python 2.Amber_MinimizationSetUp pdblist
-python 3.Amber_GenerateRST7andParm7.py pdblist
-for pdb in `cat pdblist`
+python 2.Amber_MinimizationSetUp ../input/pdblist
+python 3.Amber_GenerateRST7andParm7.py ../input/pdblist
+for pdb in `cat ../input/pdblist`
     do
-        cd amber_minimization/$pdb
+        cd ../output/amber_minimization/$pdb
         python ../../4.Amber_RunMinimization.py -p $pdb.parm7 \
             -O -c "NoH*.rst7" -i min.in
-        cd ../../
+        cd ../../../../methods/
     done
 ```
 - **Description**
-    - The script `2.Amber_MinimizationSetUp` creates the `/amber_minimization` directory in which it also creates
+    - The script `2.Amber_MinimizationSetUp` creates the `../output/amber_minimization` directory in which it also creates
     sub-directories for each of the 45 PDB IDs. In each of these sub-directories, it will also write a min.in file
     that specifies the minimization parameters for Amber minimization.
     - The script `3.Amber_GenerateRST7andParm7.py` creates a list of decoy structures from the unarchived folder under a 
@@ -95,8 +107,8 @@ for pdb in `cat pdblist`
          - All minimization and energy evaluations were performed with `sander` and its Python interface `pysander` program in development version of [AmberTools16](http://ambermd.org/AmberTools16-get.html)
 
 - **Expected Output**
-    - An `/amber_minimization` directory  
-        - `/amber_minimization/{PDB_Code}` directories  
+    - An `../output/amber_minimization` directory  
+        - `../output/amber_minimization/{PDB_Code}` directories  
             - `min.in` file  
             - `NoH_{decoy_structure}.rst7` files  
             - `{PDB_Code}.parm7` file  
@@ -108,19 +120,19 @@ for pdb in `cat pdblist`
 
 ```bash
 # In script 5.Amber_GetEnergies.py, change the BASE_DIR variable to the /method/ folder.
-python make_energy_bashscripts.py pdblist
+python make_energy_bashscripts.py ../input/pdblist
 for SCRIPT in `ls GetScores*.sh`; do sbatch $SCRIPT ; done
 ```
 
 - **Description**
     - The wrapper script `make_energy_bashscripts.py` makes slurm-style queueing system bash scripts that run the `5.Amber_GetEnergies.py` script on all {PDB_Codes} in the pdblist file.
     - The `for-loop` sends all of the bash scripts to the queueing system.
-    - The script `5.Amber_GetEnergies.py` evaluates the Amber energy of the native structure as well as the decoy structures for each `/amber_minimization/{PDB_Code}/min*.rst7` file, and calculates the CA-RMSD of each decoy structure with respect to the native structure without superimposition. It also calculates the CA-RMSD of the the loop-region only with superimposition.
+    - The script `5.Amber_GetEnergies.py` evaluates the Amber energy of the native structure as well as the decoy structures for each `../output/amber_minimization/{PDB_Code}/min*.rst7` file, and calculates the CA-RMSD of each decoy structure with respect to the native structure without superimposition. It also calculates the CA-RMSD of the the loop-region only with superimposition.
 
 - **Expected Output**
     - Several `GetScores_*.sh` scripts
     - After the energy calculation scripts have run,
-        - `/amber_minimization/{PDB_Code}/{PDB_Code}_amber.sc` files
+        - `../output/amber_minimization/{PDB_Code}/{PDB_Code}_amber.sc` files
     
     
 

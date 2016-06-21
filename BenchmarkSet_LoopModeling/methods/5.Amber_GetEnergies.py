@@ -11,13 +11,13 @@ loopdef = pd.read_json('loopdefs.json')
 comm = MPI.COMM_WORLD
 
 ##############
-BASE_DIR    =  "/scratch/kmb413/CADRES/BenchmarkSet_LoopModeling/methods"
-NATIVES_DIR =  "{base_directory}/Natives".format( base_directory=BASE_DIR )
-AMBERMIN_DIR = "{base_directory}/amber_minimization".format( base_directory=BASE_DIR )
+BASE_DIR    =  "/scratch/kmb413/CADRES/BenchmarkSet_LoopModeling/"
+NATIVES_DIR =  "{base_directory}/input/Natives".format( base_directory=BASE_DIR )
+DECOY_DIR   =  "{base_directory}/input/loop_modeling_ngk_r57934/r57934/talaris2014/job_output".format( base_directory=BASE_DIR )
 #############
 
 #try:
-#    os.mkdir('{base_directory}/amber_minimization/AmberScores/'.format( base_directory=BASE_DIR ) )
+#    os.mkdir('{base_directory}/output/amber_minimization/AmberScores/'.format( base_directory=BASE_DIR ) )
 #except OSError:
 #    pass
 

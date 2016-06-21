@@ -5,18 +5,18 @@ import pandas as pd
 from glob import glob
 
 ##### Directories and Paths ##### 
-BASE_DIR    =  "/scratch/kmb413/CADRES/BenchmarkSet_LoopModeling/methods"
-NATIVES_DIR =  "{base_directory}/Natives".format( base_directory=BASE_DIR )
-DECOY_DIR   =  "{base_directory}/loop_modeling_ngk_r57934/r57934/talaris2014/job_output".format( base_directory=BASE_DIR )
+BASE_DIR    =  "/scratch/kmb413/CADRES/BenchmarkSet_LoopModeling/"
+NATIVES_DIR =  "{base_directory}/input/Natives".format( base_directory=BASE_DIR )
+DECOY_DIR   =  "{base_directory}/input/loop_modeling_ngk_r57934/r57934/talaris2014/job_output".format( base_directory=BASE_DIR )
 
 try:
-    os.mkdir('{base_directory}/rosetta_minimization'.format( base_directory=BASE_DIR ) )
+    os.mkdir('{base_directory}/output/rosetta_minimization'.format( base_directory=BASE_DIR ) )
 except OSError:
     pass
 
 ROS_EXE =  "/home/kmb413/RealRosetta/Rosetta/main/source/bin/rosetta_scripts.static.linuxgccrelease"
 ROS_DB  =  "/home/kmb413/RealRosetta/Rosetta/main/database"
-XML = "{base_directory}/RosettaMin.xml".format( base_directory=BASE_DIR )
+XML = "{base_directory}/methods/RosettaMin.xml".format( base_directory=BASE_DIR )
 #######################
 
 ##### Functions #######
@@ -27,7 +27,7 @@ def chunks(l,n):
 
 
 ## Read in Loop Definitions
-loopdef = pd.read_json('loopdefs.json')
+loopdef = pd.read_json("{base_directory}/input/loopdefs.json".format( base_directory=BASE_DIR )
 
 def main(pdblist, auto_submit):
     ## For all PDBs in the loopdefs file, prepare minimization scripts for Slurm submission.
@@ -42,14 +42,14 @@ def main(pdblist, auto_submit):
         native = '{natives_directory}/{PDB}.clean.pdb'.format(natives_directory=NATIVES_DIR, PDB=code)
 
         ## Change to the directory where the scripts will be made.
-        #if not os.path.exists('{base_directory}/rosetta_minimization/{PDB}'.format( base_directory=BASE_DIR, PDB=code ) ):
-        #    os.mkdir('{base_directory}/rosetta_minimization/{PDB}'.format( base_directory=BASE_DIR, PDB=code ) )
+        #if not os.path.exists('{base_directory}/output/rosetta_minimization/{PDB}'.format( base_directory=BASE_DIR, PDB=code ) ):
+        #    os.mkdir('{base_directory}/output/rosetta_minimization/{PDB}'.format( base_directory=BASE_DIR, PDB=code ) )
         try:
-            os.mkdir('{base_directory}/rosetta_minimization/{PDB}'.format( base_directory=BASE_DIR, PDB=code ) )
+            os.mkdir('{base_directory}/output/rosetta_minimization/{PDB}'.format( base_directory=BASE_DIR, PDB=code ) )
         except OSError:
             pass
         
-        os.chdir('{base_directory}/rosetta_minimization/{PDB}'.format(base_directory=BASE_DIR, PDB=code))
+        os.chdir('{base_directory}/output/rosetta_minimization/{PDB}'.format(base_directory=BASE_DIR, PDB=code))
 
         ## Make a list of all PDBs in the Decoy Directory under this PDB code.
         decoylist = glob('{decoy_directory}/{PDB}*.pdb'.format(decoy_directory=DECOY_DIR, PDB=code))

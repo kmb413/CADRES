@@ -5,16 +5,18 @@ from glob import glob
 from mpi4py import MPI
 comm = MPI.COMM_WORLD
 
-BASE_DIR="/scratch/kmb413/CADRES/BlindDataset_StructurePrediction/methods"
+BASE_DIR=/scratch/kmb413/CADRES/BlindDataset_StructurePrediction/
+SCRIPTS_DIR="{base}/scripts/".format( base=BASE_DIR )
+OUTPUT_DIR="{base}/work/AmberMinimize/".format( base=BASE_DIR )
 
 def main(argv):
     args = sys.argv
     scorefile = 'AmberScores.sc'
 
-    decoy_list = glob( "{base}/5.AmberMinimize/min*.rst7".format( base=BASE_DIR ) )
+    decoy_list = glob( "{output}min*.rst7".format( output=OUTPUT_DIR ) )
 
     print("Decoy List: " + str(len(decoy_list)))
-    parmfile = "{base}/5.AmberMinimize/decoy.parm7".format( base=BASE_DIR )
+    parmfile = "{output}decoy.parm7".format( output=OUTPUT_DIR )
     
     print("Making Traj.")
     traj = pt.iterload( decoy_list, parmfile )

@@ -27,9 +27,9 @@ from subprocess import check_call
 from utils import temp_change_dir
 
 ##### Directories and Paths ##### TODO: CHANGE
-BASE_DIR    =  "/scratch/kmb413/CADRES/BenchmarkSet_LoopModeling/methods"
-NATIVES_DIR =  "{base_directory}/Natives".format( base_directory=BASE_DIR )
-DECOY_DIR   =  "{base_directory}/loop_modeling_ngk_r57934/r57934/talaris2014/job_output".format( base_directory=BASE_DIR )
+BASE_DIR    =  "/scratch/kmb413/CADRES/BenchmarkSet_LoopModeling/"
+NATIVES_DIR =  "{base_directory}/input/Natives".format( base_directory=BASE_DIR )
+DECOY_DIR   =  "{base_directory}/input/loop_modeling_ngk_r57934/r57934/talaris2014/job_output".format( base_directory=BASE_DIR )
 ##########################
 
 ## Define tLeap parameters 
@@ -51,11 +51,11 @@ def run_tleap(code, pdbfile_root, tleap_template):
 def main(pdblist, force=False):# pdb_pattern, force=False):
     for code in pdblist:
         try:
-            os.mkdir('{base_directory}/amber_minimization/{PDB}'.format( base_directory=BASE_DIR, PDB=code ) )
+            os.mkdir('{base_directory}/output/amber_minimization/{PDB}'.format( base_directory=BASE_DIR, PDB=code ) )
         except OSError:
             pass
         
-        with temp_change_dir('{base_directory}/amber_minimization/{PDB}'.format( base_directory=BASE_DIR, PDB=code ) ):
+        with temp_change_dir('{base_directory}/output/amber_minimization/{PDB}'.format( base_directory=BASE_DIR, PDB=code ) ):
             print('processing {}'.format(code))
             print(os.getcwd())
             try:

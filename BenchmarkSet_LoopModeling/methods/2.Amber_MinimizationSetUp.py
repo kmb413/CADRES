@@ -4,19 +4,19 @@ import os, sys
 import pandas as pd
 
 ##### Directories and Paths ##### TODO: CHANGE
-BASE_DIR    =  "/scratch/kmb413/CADRES/BenchmarkSet_LoopModeling/methods"
-NATIVES_DIR =  "{base_directory}/Natives".format( base_directory=BASE_DIR )
-DECOY_DIR   =  "{base_directory}/loop_modeling_ngk_r57934/r57934/talaris2014/job_output".format( base_directory=BASE_DIR )
+BASE_DIR    =  "/scratch/kmb413/CADRES/BenchmarkSet_LoopModeling/"
+NATIVES_DIR =  "{base_directory}/input/Natives".format( base_directory=BASE_DIR )
+DECOY_DIR   =  "{base_directory}/input/loop_modeling_ngk_r57934/r57934/talaris2014/job_output".format( base_directory=BASE_DIR )
 
 try:
-    os.mkdir('{base_directory}/amber_minimization'.format( base_directory=BASE_DIR ) )
+    os.mkdir('{base_directory}/output/amber_minimization'.format( base_directory=BASE_DIR ) )
 except OSError:
     pass
 ##########################
 
 
 ## Read in Loop Definitions
-loopdef = pd.read_json('loopdefs.json')
+loopdef = pd.read_json("{base_directory}/input/loopdefs.json".format( base_directory=BASE_DIR )
 
 ## Define minimization parameters
 mdin_template = """
@@ -44,10 +44,10 @@ def main(pdblist):
         loop_start = loopdef[code]['StartResidueID'].strip()
 
         ## Change to the directory where the scrips will be made.
-        if not os.path.exists('{base_directory}/amber_minimization/{PDB}'.format( base_directory=BASE_DIR, PDB=code ) ):
-            os.mkdir('{base_directory}/amber_minimization/{PDB}'.format( base_directory=BASE_DIR, PDB=code ) )
+        if not os.path.exists('{base_directory}/output/amber_minimization/{PDB}'.format( base_directory=BASE_DIR, PDB=code ) ):
+            os.mkdir('{base_directory}/output/amber_minimization/{PDB}'.format( base_directory=BASE_DIR, PDB=code ) )
 
-        os.chdir('{base_directory}/amber_minimization/{PDB}'.format(base_directory=BASE_DIR, PDB=code))
+        os.chdir('{base_directory}/output/amber_minimization/{PDB}'.format(base_directory=BASE_DIR, PDB=code))
 
         ## Write a minimization parameters file, substituting the loop data where necessary.
         with open('min.in', 'w') as fh:
