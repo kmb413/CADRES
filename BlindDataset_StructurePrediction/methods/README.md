@@ -89,7 +89,8 @@ python 4.FastRelax_LoopandMutantsPlusNeighbs.py
 #### 5. Minimize the decoys in Amber:
 
 ```bash
-# Before running script, change BASE_DIR to this methods folder and AMBER_SOURCE to the location of your AmberTool16 amber.sh file.
+# Before running script, change BASE_DIR to this methods folder and AMBER_SOURCE 
+# to the location of your AmberTool16 amber.sh file.
 
 python 5.AmberMinimize.py
 ```
