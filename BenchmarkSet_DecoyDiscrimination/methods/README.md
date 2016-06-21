@@ -14,16 +14,19 @@ Requirements
 
 Files Included
 ==============
+
 ***Rosetta Run***
 - **1.extract.sh** Extract pdb files from silent files for Rosetta run
 - **2.min.sh** Minimize and score decoys for rmsd 
     - **min.xml** helper script for above
+
 ***Amber Run***
 - **3.pdbgen_from_rosetta.py** Extract pdb files from silent files for Amber run
 - **4.generate_rst7_parm7_files.py** Generate topology and resart files for Amber minimization
 - **5.run_min.py** Run minimization
     - **min.in** helper script for above
 - **6.eamber_single.py** Get AMBER potential energies
+
 ***Wrapper/helper scripts***
 - **utils.py** Used in Amber run
 - **submit_elf1.py** Wrapper script for Amber run
@@ -60,8 +63,8 @@ loop_pdbs.sh $BASEDIR/input/decoys.set1/ "none" $BASEDIR/output/decoys.set1/ 0 2
 python 3.pdbgen_from_rosetta.py 1a32
 # Notes: I only include a single structure in `1a32` for demo
 ```
-#### 5. generate topology and resart files
-- Generate topology and resart files for AMBER minimization for given pdb code
+#### 5. generate amber files
+- Generates coordinates files (.rst7) and a topology file (.parm7) for a given pdb code
 ```bash
 python 4.generate_rst7_parm7_files.py 1a32
 ```
