@@ -15,7 +15,8 @@ Instructions
 #### 1. First, FastRelax the crystal structure of 1igs:
 
 ```bash
-# Before running script, change the ROS_EXE variable to your executables path, ROS_DB to your database path, and BASE_DIR to this methods folder.
+# Before running script, change the ROS_EXE variable to your executables path,
+# ROS_DB to your database path, and BASE_DIR to this methods folder.
 
 python 1.FastRelax_Initial.sh
 ```
@@ -32,7 +33,8 @@ python 1.FastRelax_Initial.sh
 #### 2. Then, mutate all non-loop residues to ALA, and thread the mutated sequence on the loop region:
 
 ```bash
-# Before running script, change ROS_EXE to your executables path, ROS_DB to your database path, and BASE_DIR to this methods folder.
+# Before running script, change ROS_EXE to your executables path, 
+# ROS_DB to your database path, and BASE_DIR to this methods folder.
 
 bash 2.Mutate_to_all_ALA.sh
 ```
@@ -48,7 +50,8 @@ bash 2.Mutate_to_all_ALA.sh
 #### 3. Remodel the loop region and then thread the entire mutated sequence onto the decoy structure:
 
 ```bash
-# Before running script, change the ROS_EXE variable to your executables path, ROS_DB to your database path, and BASE_DIR to this methods folder.
+# Before running script, change the ROS_EXE variable to your executables path, 
+# ROS_DB to your database path, and BASE_DIR to this methods folder.
 
 python 3.ThreadSeq_and_RemodelLoop.py
 ```
@@ -66,7 +69,8 @@ python 3.ThreadSeq_and_RemodelLoop.py
 #### 4. FastRelax the loop region and mutated residues, along with their neighboring residues:
 
 ```bash
-# Before running script, change ROS_EXE to your executables path, ROS_DB to your database path, and BASE_DIR to this methods folder.
+# Before running script, change ROS_EXE to your executables path, 
+# ROS_DB to your database path, and BASE_DIR to this methods folder.
 
 python 4.FastRelax_LoopandMutantsPlusNeighbs.py
 ```
