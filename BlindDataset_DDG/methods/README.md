@@ -62,7 +62,7 @@ export INPATH=~/git_repos/cadres_submissions/.../input/
 export SCRIPTS=~/git_repos/cadres_submissions/.../methods/
 export RESULTS=~/git_repos/cadres_submissions/.../results/
 ```
-#### Then clean and renumber all pdbs in $INPATH'/input_pdbs/'
+#### 1. Clean and renumber all pdbs in $INPATH'/input_pdbs/'
 
 ```bash
 
@@ -74,7 +74,7 @@ bash 1.score.sh $INPATH'/input_pdbs/1be9_complex.pdb' 1be9_complex 1be9 $INPATH'
     - Replaced pdb with new renumbered, cleaned pdb. 
     - If this pdb did not exist in orig_pdb, moved it there. 
 
-#### Generate mut_file and lengthen peptide as necessary for all *_complex.pdbs in $INPATH'/input_pdbs/'
+#### 2. Generate mut_file and lengthen peptide as necessary for all *_complex.pdbs in $INPATH'/input_pdbs/'
 
 ```bash
 
@@ -91,7 +91,7 @@ bash 2.preprocess.sh $INPATH'/input_pdbs/1be9_complex.pdb' 1be9_complex 1be9 $IN
     - $INPATH/mut_file/[pdb_id].rc - record id and other information correspondence file for each pdb
     - $INPATH/input_pdbs/[pdb_id][pept_length]_complex.pdb
 
-#### Pre-minimize all ????.pdb files in $INPATH/input_pdbs/ so as to generate constraint files
+#### 3. Pre-minimize all ????.pdb files in $INPATH/input_pdbs/ so as to generate constraint files
 
 ```bash
 
@@ -103,7 +103,7 @@ bash 3.pre_min.sh $INPATH'/input_pdbs/1be9.pdb' 1be9 1be9 $OUTPATH'/pre_min1/' $
     - $OUTPATH/pre_min1/min_[pdb]_0001.pdb 
     - $INPATH/input_pdbs/[pdb].cst
 
-#### Pre-minimize all ??????_*complex.pdb files in $INPATH/input_pdbs/ for input to ddg (may not be strictly necessary but it is already part of our pipeline)
+#### 3. Pre-minimize all ??????_*complex.pdb files in $INPATH/input_pdbs/ for input to ddg (may not be strictly necessary but it is already part of our pipeline)
 
 ```bash
 
@@ -115,7 +115,7 @@ bash 3.pre_min.sh $INPATH'/input_pdbs/1be908_complex.pdb' 1be908_complex 1be9 $O
     - $OUTPATH/pre_min1/min_[pdb][pept_length]_complex_0001.pdb
     - $INPATH/input_pdbs/[pdb][pept_length]_complex.cst
 
-#### Pre-pack all ??????_*complex.pdb files in $OUTPATH/pre_min1/ for input to flexpepdock 
+#### 3. Pre-pack all min_??????_*complex_0001.pdb files in $OUTPATH/pre_min1/ for input to flexpepdock 
 
 ```bash
 
@@ -124,118 +124,65 @@ bash 3.fpd_prepack.sh $OUTPATH'/pre_min1/min_1be908_complex_0001.pdb' min_1be908
 ```
 
 - **Expected Output**
-    - $INPATH/prepack/min_[pdb][pept_length]_complex_0001.pdb
-    - $INPATH/input_pdbs/[pdb][pept_length]_complex.cst
+    - $OUTPATH/prepack/min_[pdb][pept_length]_complex_0001min_[pdb][pept_length]_complex_0001_0001.pdb
 
-	#performing flexpepdock prepack - only locally
-	$SCRIPTS'/'loop_pdbs.sh $OUTPATH'/pre_min1/*_complex*.pdb' $OUTPATH'/'prepack'/' "" 4 6 $SCRIPTS'/'fpd_prepack.sh
+#### 3. Pre-minimize all files in $OUTPATH/prepack/ for input to ddg. Minimize bb and sc.
 
-        #performing a second pre_min (bb as well as sc) to prepare for ddg
-        $SCRIPTS'/'loop_pdbs.sh $OUTPATH'/prepack/*.pdb' $OUTPATH'/'pre_min2'/' "" 4 6 $SCRIPTS'/'pre_min.sh
+```bash
 
-else
-	#run ddg on pre_min pdbs
-	$SCRIPTS'/'loop_pdbs.sh $OUTPATH'/pre_min2/*.pdb' $OUTPATH'/'ddg'/' "" 8 14 $SCRIPTS'/'ddg.sh $server 5 10
-
-	#performing flexpepdock refine for 1g9o - only on server 
-        #only one server because already partitioned the pdbs in the previous step
-	$SCRIPTS'/'loop_pdbs.sh $OUTPATH'/ddg/*/*.pdb' $OUTPATH'/refine/' "" 8 6 $SCRIPTS'/'fpd_refine.sh 1 1 10
-
-	$SCRIPTS'/'loop_pdbs.sh $OUTPATH'/refine/*/' $OUTPATH'/refine/' "" 0 6 $SCRIPTS'/'fpd_postprocess.sh 1 1 1 
-
-        $SCRIPTS'/'loop_pdbs.sh $OUTPATH'/refine/*/' $OUTPATH'/ddg_csv/rosetta/' "" 0 4 $SCRIPTS'/'ddg_rmsd.sh $server 5 1
-
-fi
-
-### To run the method on all decoys in silent files for a given set (e.g. decoys.set1 or decoys.set2)
-
-#### 1. place the silent files in $BASEDIR/input/decoys.set<set_number>
-#### 2. extract pdbs from the silent files
-
-- Script for one silent file
-
-    ```bash
-    1.extract.sh $BASEDIR/input/decoys.set1/ 1a32.1000.out $BASEDIR/input/decoys.set1/1a32/ 1a32
-    ```
-
-- Wrapper script to extract all silent files when run on one server with at least 40 cores available (can change n_cores in the script itself)
-
-    ```bash
-    loop_pdbs.sh $BASEDIR/input/decoys.set1/ "*.out" $BASEDIR/input/decoys.set1/ 0 1.extract.sh 1 1 talaris2014 1
-    ```
-
-- **Description**
-    - This script will make a `../output/rosetta_minimization directory` in which it will also make
-sub-directories for each of the 45 PDB IDs. In each sub-directory, it will write several
-minimization bash scripts that have a slurm-style queueing system header and the
-minimization command. The minimization scripts will be automatically submitted to the queue
-unless auto_submit is explicitly turned off:
-
-        ```bash
-        python 1.Rosetta_Minimize.py ../input/pdblist 0
-        ```
-        - If you use this flag, you must cd into each directory and bash each min*.sh script.
-
-    - The minimization is carried out via RosettaScripts, where the loop region is minimized with BB and SC movements on. The rest of the protein is left fixed.
-
-    - Flags:
-        - -score:weights talaris2014
-        - -ex1
-        - -ex2
-        - -extrachi_cutoff 1
-        - -use_input_sc
-        - -nblist_autoupdate
+bash 3.pre_min.sh $OUTPATH'/prepack/min_1be908_complex_0001min1be908_complex_0001_0001.pdb' min_1be908_complex_0001min1be908_complex_0001_0001 1be9 $OUTPATH'/pre_min2/' "-cst_fa_file $INPATH'/'input_pdbs/1be9.cst"
+#Usage: bash 3.pre_min.sh <full_path_to_pdb_file> <actual_name_pdb_file_noext> <pdb_id> <outpath> <cst_file_param>
+```
 
 - **Expected Output**
-    - A `../output/rosetta_minimization/` directory
-        - `../output/rosetta_minimization/{PDB_Code}` directories
-            - `min*.sh` scripts.
-            - `{PDB_code}.*.list` files, which are lists containing the filepaths to 100 or less decoy structures.
+    - $OUTPATH/pre_min2/min_min_[pdb][pept_length]_complex_0001min_[pdb][pept_length]_complex_0001_0001_0001.pdb
 
-            - After the min*.sh scripts have run,
-                - `{decoy_pdb}_0001.pdb` files
-                - `score.*.sc files`, one for each of the `{PDB_code}.*.list` files.
+#### 4. Run ddg on all files in $OUTPATH/pre_min2/ to generate mutated pdb files (50 per pdb) - takes up 10 cores at a time with 5 iterations per core.
 
-#### 3. run Rosetta minimization
-- Script for one decoy
 ```bash
-2.min.sh $BASEDIR/input/decoys.set1/1a32/ empty_tag_11229_0001.pdb $BASEDIR/output/decoys.set1/1a32/ 1a32 
-```
-- Wrapper script to minimize all decoys in given set when run on one server
-```bash
-loop_pdbs.sh $BASEDIR/input/decoys.set1/ "none" $BASEDIR/output/decoys.set1/ 0 2.min.sh 1 1 talaris2014 1
+bash 4.ddg.sh $OUTPATH'/pre_min2/min_min_1be908_complex_0001min1be908_complex_0001_0001_0001.pdb' min_min_1be908_complex_0001min1be908_complex_0001_0001_0001 1be9 $OUTPATH'/ddg/' "-cst_fa_file $INPATH'/'input_pdbs/1be9.cst" 1
+#Usage: bash 4.ddg.sh <full_path_to_pdb_file> <actual_name_pdb_file_noext> <pdb_id> <outpath> <cst_file_param> <server_id_number>
 ```
 
-#### 4. extract pdbs from the silent files for AMBER minimization (unnecessary if Step 1 has already been done) 
-- Generate all pdb files for AMBER with given pdb code (e.g. `1a32`)
-```bash
-python 3.pdbgen_from_rosetta.py 1a32
-# Notes: I only include a single structure in `1a32` for demo
-```
-#### 5. generate amber files
-- Generates coordinates files (.rst7) and a topology file (.parm7) for a given pdb code
-```bash
-python 4.generate_rst7_parm7_files.py 1a32
-```
-#### 6. run Amber minimization
-- Run minimization
-```bash
-cd 1a32/
-python ../scripts/5.run_min.py -p empty_tag_11229_0001.parm7 -c "NoH*.rst7" -i ../input/min.in
+- **Expected Output**
+    - $OUTPATH/ddg/min_min_[pdb][pept_length]_complex_0001min_[pdb][pept_length]_complex_0001_0001_0001/ directory
+    	- $i/ directories inside it, with i representing 1-10
+	     - each directory has files associated with running ddg 5 times
+        - for each mutated sequence, three associated pdb files (the three with the lowest energies) are extracted to the top level directory
 
-# minimized coordinate filename: min*rst7
-```
-#### 7. get AMBER potential energy 
-- Get AMBER potential energy for a given pdb code
+#### 5. Run flexpepdock refine on all files in $OUTPATH/ddg/*/*.pdb to generate diversity per sequence - takes up 10 cores at a time with 1 (for NMR ensembles) or 20 nstruct per core.
+todo what is filename?
+```bash 
+bash 5.fpd_refine.sh $OUTPATH'/ddg/min_min_1be908_complex_0001min1be908_complex_0001_0001_0001/*.pdb' filename 1be9 $OUTPATH'/refine/' "-cst_fa_file $INPATH'/'input_pdbs/1be9.cst" 1 0
+#Usage: bash 5.fpd_refine.sh <full_path_to_pdb_file> <actual_name_pdb_file_noext> <pdb_id> <outpath> <cst_file_param> <server> <nmr>
+```     
+
+- **Expected Output**
+    - $OUTPATH/refine/[pdb][pept_length]_[mut_seq]/ directory
+        - $prefix_$i/ directories inside it, with i representing 1-10 and prefix representing unique identifier for each sequence of the top 3 identified in the step before.
+             - each directory has files associated with running fpd, including output pdb files
+
+#### 6. Postprocess fpd results to choose 50 pdbs from along the bottom of the energy funnel (i.e. distributed in rmsd over lowest 10% energy)  
+
 ```bash
-# make sure to adjust script to your need
-python scripts/7.eamber_single.py
+bash 6.fpd_postprocess.sh $OUTPATH'/refine/1be908_wt/' 1be908_wt 1be908 $OUTPATH'/refine/'
+#Usage: bash 4.ddg.sh <full_path_to_pdb_file> <actual_name_pdb_file_noext> <pdb_id> <outpath>
+``` 
 
-# Expectation: AMBER potential energy for one of snapshots
-# ('1a32/min_NoH_empty_tag_11229_0001.rst7', -3661.805075801537)
+- **Expected Output**
+    - 50 files labeled $OUTPATH/refine/[pdb][pept_length]_[mut_seq]/[prefix]_[mut|repacked]_[seq|wt]_round_[suffix].pdb
+
+#### 7. Evaluate dg as binding energy (Ebound - Edomain - Epept) and retrieve rmsd from native 
+
+```bash
+bash 7.ddg_rmsd.sh $OUTPATH'/refine/1be908_wt/' 1be908_wt 1be9 $OUTPATH'/ddg_csv/rosetta/' 
+#Usage: bash 4.ddg.sh <full_path_to_pdb_file> <actual_name_pdb_file_noext> <pdb_id> <outpath>
 ```
 
-- Generate topology and resart files for AMBER minimization
+- **Expected Output**
+    - $OUTPATH/ddg_csv/rosetta/[pdb][pept_length]_[mut_seq].csv 
+
+#### 8. Generate topology and resart files for AMBER minimization
 
     ```bash
     export root_dir=/project1/dacase-001/haichit/rosseta_amber/pdz/PDZ_ddG/results/refine/
@@ -249,7 +196,7 @@ python scripts/7.eamber_single.py
     # For demonstration, I kept only a single pdb file, rst7 and prmtop in ./1be908_wt folder
     ```
 
-- Run minimization
+#### 9. Run AMBER minimization
 
     ```bash
     cd 1be908_wt
@@ -258,7 +205,7 @@ python scripts/7.eamber_single.py
     # minimized coordinate filename: min*rst7
     ```
 
-- Get AMBER ddG by running MMGBSA method
+#### 10. Get AMBER ddG by running MMGBSA method
 
     ```bash
     cd 1be908_wt
@@ -271,7 +218,7 @@ python scripts/7.eamber_single.py
     # Expectation: AMBER's ddG (kcal/mol) for demo snapshot
     # min_NoH_9_2_9_9_repacked_wt_round_2_0020.rst7: -63.18075344
     ```
-- Run mmgbsa per residue energy decomposition
+#### 11. Run mmgbsa per residue energy decomposition
 
     ```bash
     # n_proteins = 87
@@ -285,7 +232,7 @@ python scripts/7.eamber_single.py
     python ./scripts/decomp_single.py ../../../1be908_wt
     ```
 
-- Get average energy (from 50 snapshots) for each residue in each protein
+#### 12. Get average energy (from 50 snapshots) for each residue in each protein
 
    ```bash
    cd 1be908_wt
@@ -303,17 +250,12 @@ python scripts/7.eamber_single.py
    # tot: Total free energy contributions (sum of previous 5).
    ```
 
-- Get total energy for each residue for each snapshot
+#### 13. Evaluate interaction energy (two-body energies spanning interface + one-body energies of mutated residues (without ref energies)) for Rosetta and Amber
 
-    ```bash
-    cd 1be908_wt
-    python ../scripts/get_energy_each_snapshot.py
-    ```
-
-- See also:
-
-    ```bash
-    Section: "Decomposition Data" in http://ambermd.org/doc12/Amber16.pdf (page 675)
+```bash
+bash 13.get_interaction_energy.sh $OUTPATH'/ddg/min_min_1be908_complex_0001min1be908_complex_0001_0001_0001/*.pdb' filename 1be9 $OUTPATH'/refine/' "-cst_fa_file $INPATH'/'input_pdbs/1be9.cst" 1 0
+#Usage: bash 5.fpd_refine.sh <full_path_to_pdb_file> <actual_name_pdb_file_noext> <pdb_id> <outpath> <cst_file_param> <server> <nmr>
+```  
 
 Methods
 -------
@@ -325,4 +267,8 @@ of the Cartesian elements of the gradients is less than 0.01 kcal/mol.
 
 All minimization and energy evaluations were performed with the development version of [AmberTools16](
 http://ambermd.org/AmberTools16-get.html)
-~                                           
+
+- See also:
+
+    ```bash
+    Section: "Decomposition Data" in http://ambermd.org/doc12/Amber16.pdf (page 675)~                                           

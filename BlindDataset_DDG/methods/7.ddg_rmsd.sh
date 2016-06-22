@@ -4,9 +4,6 @@ pdb=$1
 actual_fn=$2 
 pdb_name=$3
 pdb_final_outpath=$4
-cst_file=$5
-server=$6
-nmr=$7
 
 
 #find all pdb files in this directory and put them in a list
