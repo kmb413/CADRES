@@ -1,0 +1,25 @@
+<ROSETTASCRIPTS>
+      <SCOREFXNS>
+                <myscore weights="talaris2014_cst" />
+      </SCOREFXNS>
+      <TASKOPERATIONS>
+         <InitializeFromCommandline name=init/>
+
+      </TASKOPERATIONS>
+      <FILTERS>
+	<Rmsd name=rmsd threshold=100 superimpose=1 > 
+	</Rmsd>
+	<Ddg name=ddg scorefxn=myscore threshold=15 repeats=5 repack=true repack_bound=false /> 
+
+      </FILTERS>
+
+      <MOVERS>
+	</MOVERS>
+	<APPLY_TO_POSE>
+	</APPLY_TO_POSE>
+
+      <PROTOCOLS>
+              <Add filter_name=rmsd/>
+      	      <Add filter_name=ddg/>
+      </PROTOCOLS>
+</ROSETTASCRIPTS>

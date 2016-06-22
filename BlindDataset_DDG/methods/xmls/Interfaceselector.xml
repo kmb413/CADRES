@@ -1,0 +1,28 @@
+<ROSETTASCRIPTS>
+    <SCOREFXNS>
+    </SCOREFXNS>
+    <RESIDUE_SELECTORS>
+        <Chain name=chainA chains="%%chain1%%" />
+        <Chain name=chainB chains="%%chain2%%" />
+        <Or name=chains selectors=chainA,chainB />
+        <Not name=notchains selector=chains />
+        <InterfaceByVector name=interface grp1_selector=chainA grp2_selector=chainB />
+        <Not name=not_interface selector=interface />
+    </RESIDUE_SELECTORS>
+    <TASKOPERATIONS>
+       <OperateOnResidueSubset name=not_interface_prevention selector=not_interface >
+            <PreventRepackingRLT/>
+       </OperateOnResidueSubset>     
+       <OperateOnResidueSubset name=interface_repack selector=interface >
+            <RestrictToRepackingRLT/>
+       </OperateOnResidueSubset>     
+    </TASKOPERATIONS>
+    <FILTERS>
+        <DesignableResidues name=interface_filter packable=1 task_operations=not_interface_prevention />
+    </FILTERS>
+    <MOVERS>
+    </MOVERS>
+    <PROTOCOLS>
+        <Add filter=interface_filter />
+    </PROTOCOLS>
+</ROSETTASCRIPTS>

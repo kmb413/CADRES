@@ -1,0 +1,16 @@
+MMPBSA.py input file for running GB, http://ambermd.org/doc12/Amber16.pdf
+&general
+   startframe=1, endframe=50,
+   keep_files=2,
+   debug_printlevel=2,
+   use_sander=1,
+   netcdf=1,
+/
+&gb
+   igb=8,
+   molsurf=0,
+/
+&decomp
+   csv_format=1,
+   dec_verbose=0,
+   idecomp=2,
